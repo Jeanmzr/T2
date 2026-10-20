@@ -14,7 +14,7 @@ n = 9
 ini = (8, 0)
 fin = (0, 0)
 meta = 23
-movs = [(-1, 0), (0, 1), (1, 0), (0, -1)]   
+movs = [(-1, 0), (0, 1), (1, 0), (0, -1)]
 
 def val(f, c):
     x = lab[f][c]
@@ -50,24 +50,40 @@ def mostrar(mat):
         print()
 
 
+def recorrer(ruta):
+    total = 0
+    for paso, (f, c) in enumerate(ruta):
+        total += pts(f, c)
+        mat = [["#" if val(a, b) == 0 else "." for b in range(n)] for a in range(n)]
+        for a, b in ruta[:paso]:
+            mat[a][b] = "*"
+        mat[f][c] = "R"
+        print(f"\npaso {paso} / puntos: {total}")
+        mostrar(mat)
+    print("\nel raton llego al final del laberinto")
+
+
 def main():
-    print("laberinto sin completar (original):")
+    print("Laberinto original:")
     mostrar(lab)
 
     ruta = [ini]
     if buscar(ini[0], ini[1], 0, ruta, {ini}):
         total = sum(pts(f, c) for f, c in ruta)
-        print(f"\nencontraste la salida. lograste {total} puntos. (como minimo necesitas {meta})")
+        print(f"\nencontraste la salida. puntos conseguidos: {total} (mínimo {meta} para ganar)")
+        print("\nrecorrido (R = ratón, * = por donde pasó):")
+        recorrer(ruta)
 
         sol = [["#" if val(f, c) == 0 else "." for c in range(n)] for f in range(n)]
         for f, c in ruta:
             sol[f][c] = "*"
         sol[ini[0]][ini[1]] = "I"
         sol[fin[0]][fin[1]] = "F"
+
         mostrar(sol)
         print(f"\npasos: {len(ruta) - 1}")
     else:
-        print(f"\nno lograste encontrar la salida. no llegaste al minimo de {meta} puntos")
+        print(f"\nno lograste salir del laberinto. no conseguiste {meta} puntos")
 
 
 if __name__ == "__main__":
